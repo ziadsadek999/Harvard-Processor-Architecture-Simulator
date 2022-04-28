@@ -84,14 +84,14 @@ public class Main {
 
 	private void sb() {
 		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1]
+		short r1 = decodedInstruction[1];
 		data[r2]=registers[r1];
 
 	}
 
 	private void lb() {
 		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1]
+		short r1 = decodedInstruction[1];
 		registers[r1]=data[r2];
 
 	}
@@ -106,13 +106,18 @@ public class Main {
 
 	}
 
+	
 	private void jr() {
-		// TODO Auto-generated method stub
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		pc = Short.parseShort(Byte.toString(registers[r1]) + Byte.toString(registers[r2]));
 
 	}
 
 	private void or() {
-		// TODO Auto-generated method stub
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1] |= registers[r2] ;
 
 	}
 
