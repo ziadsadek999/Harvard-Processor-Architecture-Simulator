@@ -44,86 +44,86 @@ public class Main {
 		short opcode = decodedInstruction[0];
 		switch (opcode) {
 		case 0:
-			add(instruction);
+			add();
 			break;
 		case 1:
-			sub(instruction);
+			sub();
 			break;
 		case 2:
-			mul(instruction);
+			mul();
 			break;
 		case 3:
-			ldi(instruction);
+			ldi();
 			break;
 		case 4:
-			beqz(instruction);
+			beqz();
 			break;
 		case 5:
-			and(instruction);
+			and();
 			break;
 		case 6:
-			or(instruction);
+			or();
 			break;
 		case 7:
-			jr(instruction);
+			jr();
 			break;
 		case 8:
-			slc(instruction);
+			slc();
 			break;
 		case 9:
-			src(instruction);
+			src();
 			break;
 		case 10:
-			lb(instruction);
+			lb();
 			break;
 		case 11:
-			sb(instruction);
+			sb();
 			break;
 		}
 	}
 
-	private void sb(short instruction) {
+	private void sb() {
 		short r2 = decodedInstruction[2];
 		short r1 = decodedInstruction[1]
 		data[r2]=registers[r1];
 
 	}
 
-	private void lb(short instruction) {
+	private void lb() {
 		short r2 = decodedInstruction[2];
 		short r1 = decodedInstruction[1]
 		registers[r1]=data[r2];
 
 	}
 
-	private void src(short instruction) {
+	private void src() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void slc(short instruction) {
+	private void slc() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void jr(short instruction) {
+	private void jr() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void or(short instruction) {
+	private void or() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void and(short instruction) {
+	private void and() {
 		short r2 = decodedInstruction[2];
 		short r1 = decodedInstruction[1];
 		registers[r1] &= registers[r2];
 
 	}
 
-	private void beqz(short instruction) {
+	private void beqz() {
 		short imm = decodedInstruction[2];
 		short r = decodedInstruction[1];
 		if (r == 0) {
@@ -132,23 +132,23 @@ public class Main {
 
 	}
 
-	private void ldi(short instruction) {
+	private void ldi() {
 		short imm = decodedInstruction[2];
 		short r = decodedInstruction[1];
 		registers[r] = (byte) imm;
 	}
 
-	private void mul(short instruction) {
+	private void mul() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void sub(short instruction) {
+	private void sub() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void add(short instruction) {
+	private void add() {
 		// TODO Auto-generated method stub
 
 	}
