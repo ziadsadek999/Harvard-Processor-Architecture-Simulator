@@ -8,6 +8,7 @@ public class Main {
 	Short fetching;
 	Short decoding;
 	Short executing;
+	short[] decodedInstruction;
 
 	public void run() {
 		int c = 1;
@@ -19,15 +20,28 @@ public class Main {
 			fetching = instructions[pc++];
 			if (executing == null && decoding == null && fetching == null)
 				break;
-			if (executing != null) {
+			if (decoding != null)
+				decode(decoding);
+			if (executing != null)
 				exec(executing);
-			}
+			
 			c++;
 		}
 	}
 
+	public void decode(short instruction) {
+		// opcode at index 0
+		decodedInstruction[0] = (short) (instruction >> 12);
+		// r1 at index 1
+		short r1 = (short) (instruction >> 6);
+		r1 = (short) (r1 % (1 << 6));
+		decodedInstruction[1] = r1;
+		// r2 or immediate at index 2
+		decodedInstruction[2] = (short) (instruction % (1 << 6));
+	}
+
 	public void exec(short instruction) {
-		short opcode = (short) (instruction >> 12);
+		short opcode = decodedInstruction[0];
 		switch (opcode) {
 		case 0:
 			add(instruction);
@@ -99,17 +113,15 @@ public class Main {
 	}
 
 	private void and(short instruction) {
-		short r2 = (short) (instruction % (1 << 6));
-		instruction >>= 6;
-		short r1 = (short) (instruction % (1 << 6));
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
 		registers[r1] &= registers[r2];
 
 	}
 
 	private void beqz(short instruction) {
-		short imm = (short) (instruction % (1 << 6));
-		instruction >>= 6;
-		short r = (short) (instruction % (1 << 6));
+		short imm = decodedInstruction[2];
+		short r = decodedInstruction[1];
 		if (r == 0) {
 			pc = (short) (pc + 1 + imm);
 		}
@@ -117,9 +129,8 @@ public class Main {
 	}
 
 	private void ldi(short instruction) {
-		short imm = (short) (instruction % (1 << 6));
-		instruction >>= 6;
-		short r = (short) (instruction % (1 << 6));
+		short imm = decodedInstruction[2];
+		short r = decodedInstruction[1];
 		registers[r] = (byte) imm;
 	}
 
