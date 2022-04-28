@@ -83,12 +83,16 @@ public class Main {
 	}
 
 	private void sb(short instruction) {
-		// TODO Auto-generated method stub
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1]
+		data[r2]=register[r1];
 
 	}
 
 	private void lb(short instruction) {
-		// TODO Auto-generated method stub
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1]
+		register[r1]=data[r2];
 
 	}
 
