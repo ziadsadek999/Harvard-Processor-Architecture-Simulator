@@ -144,18 +144,23 @@ public class Main {
 	}
 
 	private void mul() {
-		// TODO Auto-generated method stub
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1] *= registers[r2] ;
 
 	}
 
 	private void sub() {
-		// TODO Auto-generated method stub
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1] -= registers[r2] ;
 
 	}
 
 	private void add() {
-		// TODO Auto-generated method stub
-
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1] += registers[r2] ;
 	}
 
 }
