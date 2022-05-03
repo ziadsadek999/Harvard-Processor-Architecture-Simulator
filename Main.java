@@ -23,7 +23,7 @@ public class Main {
 			if (decoding != null)
 				decode(decoding);
 			if (executing != null)
-				exec(executing);
+				exec();
 			
 			c++;
 		}
@@ -40,7 +40,7 @@ public class Main {
 		decodedInstruction[2] = (short) (instruction % (1 << 6));
 	}
 
-	public void exec(short instruction) {
+	public void exec() {
 		short opcode = decodedInstruction[0];
 		switch (opcode) {
 		case 0:
