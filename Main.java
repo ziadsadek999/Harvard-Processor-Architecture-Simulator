@@ -12,14 +12,13 @@ public class Main {
 	Integer executing;
 	int[] decodedInstruction = new int[3];
 	int mask = (1 << 8) - 1;
-	String[] instructionsString = new String[1024];
+	HashMap<Integer, String> instructionsMap = new HashMap<Integer, String>();
 
 	public Main(String fileName) throws Exception {
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		int i = 0;
 		while (br.ready()) {
 			String ss = br.readLine();
-			instructionsString[i] = ss;
 			String[] s = ss.split(" ");
 			switch (s[0]) {
 			case "ADD":
@@ -59,10 +58,10 @@ public class Main {
 				instructions[i] = 11;
 				break;
 			}
-			instructions[i]<<=6;
+			instructions[i] <<= 6;
 			int r1 = Integer.parseInt(s[1].substring(1));
-			instructions[i]|=r1;
-			instructions[i]<<=6;
+			instructions[i] |= r1;
+			instructions[i] <<= 6;
 			int r2 = 0;
 			switch (s[0]) {
 			case "ADD":
@@ -81,9 +80,10 @@ public class Main {
 			case "LB":
 			case "SB":
 				r2 = Integer.parseInt(s[2]);
-				instructions[i] |= r2;
+				instructions[i] |= (r2 & ((1 << 6) - 1));
 				break;
 			}
+			instructionsMap.put(instructions[i], ss);
 			i++;
 		}
 		br.close();
@@ -92,38 +92,104 @@ public class Main {
 	public void run() {
 		int c = 1;
 		while (true) {
-			if (pc >= 1024)
-				break;
-			
-			
-			
+
 			executing = decoding;
 			decoding = fetching;
-			fetching = instructions[pc++];
+			if (pc < 1024)
+				fetching = instructions[pc++];
+			else
+				fetching = null;
 			if (executing == null && decoding == null && fetching == null)
 				break;
-			if (decoding != null)
-				decode(decoding);
-			if (executing != null)
+			System.out.println("Start of Cycle " + c);
+			System.out.println("Program Counter: binaryContent = " + extend(pc, 16) + " content = " + pc);
+			if (executing != null) {
+				System.out.println("EXECUTING " + instructionsMap.get(executing) + " " + extend(executing, 16));
 				exec();
+
+			}
+			if (decoding != null) {
+
+				System.out.println("DECODING " + extend(decoding, 16));
+				System.out.println("Decoded Instruction For Next Cycle:-");
+				decode(decoding);
+				int op = decodedInstruction[0];
+				int r1 = decodedInstruction[1];
+				int r2 = decodedInstruction[2];
+				System.out.println("OPcode=" + extend(op, 4) + " R1=" + extend(r1, 6) + " R2/IMM/OFF=" + extend(r2, 6));
+				System.out.println("OPcodeValue=" + op + " R1Index=" + r1 + " R2Index/Immediate=" + r2);
+				System.out.println("Inputs For Next Cycle:-");
+				System.out.println("R1: binaryContent = " + extend(registers[r1], 8) + " content = " + registers[r1]);
+				if (op == 0 || op == 1 || op == 2 || op == 5 || op == 6 || op == 7) {
+					System.out
+							.println("R2: binaryContent = " + extend(registers[r2], 8) + " content = " + registers[r2]);
+				} else if (op >= 10) {
+					System.out.println("ADDRESS: binaryContent = " + extend(r2, 6) + " content = " + r2);
+				} else {
+					System.out.println("IMM: binaryContent = " + extend(r2, 6) + " content = " + r2);
+				}
+			}
+			if (fetching != null) {
+				System.out.println("FETCHING " + extend(fetching, 16) + " From Instruction Memory");
+				System.out.println("Program Counter Updated To binaryContent = " + extend(pc, 16) + " content = " + pc);
+			}
 
 			c++;
 		}
+		System.out.println();
+		System.out.println();
+		System.out.println("EXECUTION FINISHED!");
+		int cc = (sreg & (1 << 4)) == 0 ? 0 : 1;
+		int v = (sreg & (1 << 3)) == 0 ? 0 : 1;
+		int n = (sreg & (1 << 2)) == 0 ? 0 : 1;
+		int s = (sreg & (1 << 1)) == 0 ? 0 : 1;
+		int z = (sreg & (1)) == 0 ? 0 : 1;
+		System.out.println("REGISTERS");
+		System.out.println(
+				"Status Register: " + extend(sreg, 8) + " C=" + cc + " V=" + v + " N=" + n + " S=" + s + " Z=" + z);
+		System.out.println("Program Counter: binaryContent = " + extend(pc, 16) + " content = " + pc);
+		for (int i = 0; i < registers.length; i++) {
+			System.out.println("Register "+i+": binaryContent = " + extend(registers[i], 8) + " content = " + registers[i]);
+		}
+		System.out.println("INSTRUCTIONS MEMORY");
+		for (int i = 0; i < instructions.length; i++) {
+			if(instructions[i]==null)
+				continue;
+			System.out.println("Instruction "+i+": binaryContent = " + extend(instructions[i], 16) + " content = " + instructionsMap.get(instructions[i]));
+		}
+		System.out.println("DATA MEMORY");
+		for (int i = 0; i < data.length; i++) {
+			if(data[i]==null)
+				continue;
+			System.out.println("Data address "+i+": binaryContent = " + extend(data[i], 8) + " content = " + data[i]);
+		}
+	}
+
+	public String extend(int x, int l) {
+		String res = Integer.toBinaryString(x);
+		if (res.length() > l) {
+			return res.substring(res.length() - l, res.length());
+		}
+		while (res.length() < l) {
+			res = "0" + res;
+		}
+		return res;
 	}
 
 	public void decode(int instruction) {
 		// opcode at index 0
-		decodedInstruction[0] = (int) (instruction >> 12);
+		decodedInstruction[0] = (instruction >> 12);
 		// r1 at index 1
-		int r1 = (int) (instruction >> 6);
-		r1 = (int) (r1 % (1 << 6));
+		int r1 = (instruction >> 6);
+		r1 = (r1 % (1 << 6));
 		decodedInstruction[1] = r1;
 		// r2 or immediate at index 2
-		decodedInstruction[2] = (int) (instruction % (1 << 6));
+		decodedInstruction[2] = (instruction % (1 << 6));
 	}
 
 	public void exec() {
 		int opcode = decodedInstruction[0];
+		int tmp = registers[decodedInstruction[1]];
 		switch (opcode) {
 		case 0:
 			add();
@@ -162,13 +228,30 @@ public class Main {
 			sb();
 			break;
 		}
+		int c = (sreg & (1 << 4)) == 0 ? 0 : 1;
+		int v = (sreg & (1 << 3)) == 0 ? 0 : 1;
+		int n = (sreg & (1 << 2)) == 0 ? 0 : 1;
+		int s = (sreg & (1 << 1)) == 0 ? 0 : 1;
+		int z = (sreg & (1)) == 0 ? 0 : 1;
+		System.out.println(
+				"Status Register: " + extend(sreg, 8) + " C=" + c + " V=" + v + " N=" + n + " S=" + s + " Z=" + z);
+		if (opcode != 11 && opcode != 4 && opcode != 7) {
+			printChange(tmp);
+		}
+
+	}
+
+	private void printChange(int prev) {
+		int r1 = decodedInstruction[1];
+		System.out.println("WRITING BACK To Register " + r1);
+		System.out.println("Register " + r1 + " Content Updated From binaryContent = " + extend(prev, 8) + " content = "
+				+ prev + " To binaryContent = " + extend(registers[r1], 8) + " content = " + registers[r1]);
 	}
 
 	private void sb() {
 		int r2 = decodedInstruction[2];
 		int r1 = decodedInstruction[1];
 		data[r2] = registers[r1];
-
 	}
 
 	private void lb() {
@@ -240,15 +323,18 @@ public class Main {
 	private void mul() {
 		int r2 = decodedInstruction[2];
 		int r1 = decodedInstruction[1];
+		sflag(registers[r1], registers[r2], 2);
 		int res = registers[r1] * registers[r2];
 		int x = registers[r1] & mask;
 		int y = registers[r2] & mask;
 		if (x * y > Byte.MAX_VALUE) {
 			sreg |= (1 << 4);
+			System.out.println("Carry Flag Updated To 1");
 		} else {
 			if ((sreg & (1 << 4)) != 0) {
 				sreg ^= (1 << 4);
 			}
+			System.out.println("Carry Flag Updated To 0");
 		}
 		int sign = res & (1 << 7);
 		if (sign == 0) {
@@ -256,16 +342,20 @@ public class Main {
 				if ((sreg & (1 << 3)) != 0) {
 					sreg ^= (1 << 3);
 				}
+				System.out.println("Overflow Flag Updated To 0");
 			} else {
 				sreg |= (1 << 3);
+				System.out.println("Overflow Flag Updated To 1");
 			}
 		} else {
 			if (res >= 0) {
 				sreg |= (1 << 3);
+				System.out.println("Overflow Flag Updated To 1");
 			} else {
 				if ((sreg & (1 << 3)) != 0) {
 					sreg ^= (1 << 3);
 				}
+				System.out.println("Overflow Flag Updated To 0");
 			}
 		}
 		nflag(res);
@@ -276,15 +366,18 @@ public class Main {
 	private void sub() {
 		int r2 = decodedInstruction[2];
 		int r1 = decodedInstruction[1];
+		sflag(registers[r1], registers[r2], 1);
 		int res = registers[r1] - registers[r2];
 		int x = registers[r1] & mask;
 		int y = registers[r2] & mask;
 		if (x - y > Byte.MAX_VALUE) {
 			sreg |= (1 << 4);
+			System.out.println("Carry Flag Updated To 1");
 		} else {
 			if ((sreg & (1 << 4)) != 0) {
 				sreg ^= (1 << 4);
 			}
+			System.out.println("Carry Flag Updated To 0");
 		}
 		int sign = res & (1 << 7);
 		if (sign == 0) {
@@ -292,16 +385,20 @@ public class Main {
 				if ((sreg & (1 << 3)) != 0) {
 					sreg ^= (1 << 3);
 				}
+				System.out.println("Overflow Flag Updated To 0");
 			} else {
 				sreg |= (1 << 3);
+				System.out.println("Overflow Flag Updated To 1");
 			}
 		} else {
 			if (res >= 0) {
 				sreg |= (1 << 3);
+				System.out.println("Overflow Flag Updated To 1");
 			} else {
 				if ((sreg & (1 << 3)) != 0) {
 					sreg ^= (1 << 3);
 				}
+				System.out.println("Overflow Flag Updated To 0");
 			}
 		}
 		nflag(res);
@@ -313,15 +410,18 @@ public class Main {
 	private void add() {
 		int r2 = decodedInstruction[2];
 		int r1 = decodedInstruction[1];
+		sflag(registers[r1], registers[r2], 0);
 		int res = registers[r1] + registers[r2];
 		int x = registers[r1] & mask;
 		int y = registers[r2] & mask;
 		if (x + y > Byte.MAX_VALUE) {
 			sreg |= (1 << 4);
+			System.out.println("Carry Flag Updated To 1");
 		} else {
 			if ((sreg & (1 << 4)) != 0) {
 				sreg ^= (1 << 4);
 			}
+			System.out.println("Carry Flag Updated To 0");
 		}
 		int sign = res & (1 << 7);
 		if (sign == 0) {
@@ -329,16 +429,20 @@ public class Main {
 				if ((sreg & (1 << 3)) != 0) {
 					sreg ^= (1 << 3);
 				}
+				System.out.println("Overflow Flag Updated To 0");
 			} else {
 				sreg |= (1 << 3);
+				System.out.println("Overflow Flag Updated To 1");
 			}
 		} else {
 			if (res >= 0) {
 				sreg |= (1 << 3);
+				System.out.println("Overflow Flag Updated To 1");
 			} else {
 				if ((sreg & (1 << 3)) != 0) {
 					sreg ^= (1 << 3);
 				}
+				System.out.println("Overflow Flag Updated To 0");
 			}
 		}
 		nflag(res);
@@ -351,9 +455,12 @@ public class Main {
 			if ((sreg & (1 << 2)) != 0) {
 				sreg ^= (1 << 2);
 			}
+			System.out.println("Negative Flag Updated To 0");
 		} else {
 			sreg |= (1 << 2);
+			System.out.println("Negative Flag Updated To 1");
 		}
+
 	}
 
 	private void zflag(int result) {
@@ -361,8 +468,44 @@ public class Main {
 			if ((sreg & (1)) != 0) {
 				sreg ^= (1);
 			}
+			System.out.println("Zero Flag Updated To 0");
 		} else {
 			sreg |= (1);
+			System.out.println("Zero Flag Updated To 0");
+		}
+	}
+
+	private void sflag(int x, int y, int op) {
+		if (op == 0) {
+			if (x + y > 0) {
+				if ((sreg & (2)) != 0) {
+					sreg ^= (2);
+				}
+				System.out.println("Sign Flag Updated To 0");
+			} else {
+				sreg |= (2);
+				System.out.println("Sign Flag Updated To 1");
+			}
+		} else if (op == 1) {
+			if (x - y > 0) {
+				if ((sreg & (2)) != 0) {
+					sreg ^= (2);
+				}
+				System.out.println("Sign Flag Updated To 0");
+			} else {
+				sreg |= (2);
+				System.out.println("Sign Flag Updated To 1");
+			}
+		} else {
+			if (x * y > 0) {
+				if ((sreg & (2)) != 0) {
+					sreg ^= (2);
+				}
+				System.out.println("Sign Flag Updated To 0");
+			} else {
+				sreg |= (2);
+				System.out.println("Sign Flag Updated To 1");
+			}
 		}
 	}
 }
