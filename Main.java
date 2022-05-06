@@ -23,7 +23,7 @@ public class Main {
 			if (decoding != null)
 				decode(decoding);
 			if (executing != null)
-				exec(executing);
+				exec();
 			
 			c++;
 		}
@@ -40,86 +40,95 @@ public class Main {
 		decodedInstruction[2] = (short) (instruction % (1 << 6));
 	}
 
-	public void exec(short instruction) {
+	public void exec() {
 		short opcode = decodedInstruction[0];
 		switch (opcode) {
 		case 0:
-			add(instruction);
+			add();
 			break;
 		case 1:
-			sub(instruction);
+			sub();
 			break;
 		case 2:
-			mul(instruction);
+			mul();
 			break;
 		case 3:
-			ldi(instruction);
+			ldi();
 			break;
 		case 4:
-			beqz(instruction);
+			beqz();
 			break;
 		case 5:
-			and(instruction);
+			and();
 			break;
 		case 6:
-			or(instruction);
+			or();
 			break;
 		case 7:
-			jr(instruction);
+			jr();
 			break;
 		case 8:
-			slc(instruction);
+			slc();
 			break;
 		case 9:
-			src(instruction);
+			src();
 			break;
 		case 10:
-			lb(instruction);
+			lb();
 			break;
 		case 11:
-			sb(instruction);
+			sb();
 			break;
 		}
 	}
 
-	private void sb(short instruction) {
+	private void sb() {
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		data[r2]=registers[r1];
+
+	}
+
+	private void lb() {
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1]=data[r2];
+
+	}
+
+	private void src() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void lb(short instruction) {
+	private void slc() {
 		// TODO Auto-generated method stub
 
 	}
 
-	private void src(short instruction) {
-		// TODO Auto-generated method stub
+	
+	private void jr() {
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		pc = Short.parseShort(Byte.toString(registers[r1]) + Byte.toString(registers[r2]));
 
 	}
 
-	private void slc(short instruction) {
-		// TODO Auto-generated method stub
+	private void or() {
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1] |= registers[r2] ;
 
 	}
 
-	private void jr(short instruction) {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void or(short instruction) {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void and(short instruction) {
+	private void and() {
 		short r2 = decodedInstruction[2];
 		short r1 = decodedInstruction[1];
 		registers[r1] &= registers[r2];
 
 	}
 
-	private void beqz(short instruction) {
+	private void beqz() {
 		short imm = decodedInstruction[2];
 		short r = decodedInstruction[1];
 		if (r == 0) {
@@ -128,25 +137,30 @@ public class Main {
 
 	}
 
-	private void ldi(short instruction) {
+	private void ldi() {
 		short imm = decodedInstruction[2];
 		short r = decodedInstruction[1];
 		registers[r] = (byte) imm;
 	}
 
-	private void mul(short instruction) {
-		// TODO Auto-generated method stub
+	private void mul() {
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1] *= registers[r2] ;
 
 	}
 
-	private void sub(short instruction) {
-		// TODO Auto-generated method stub
+	private void sub() {
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1] -= registers[r2] ;
 
 	}
 
-	private void add(short instruction) {
-		// TODO Auto-generated method stub
-
+	private void add() {
+		short r2 = decodedInstruction[2];
+		short r1 = decodedInstruction[1];
+		registers[r1] += registers[r2] ;
 	}
 
 }
