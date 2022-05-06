@@ -1,3 +1,5 @@
+import java.io.*;
+import java.util.*;
 
 public class Main {
 	Integer[] instructions = new Integer[1024];
@@ -10,12 +12,91 @@ public class Main {
 	Integer executing;
 	int[] decodedInstruction = new int[3];
 	int mask = (1 << 8) - 1;
+	String[] instructionsString = new String[1024];
+
+	public Main(String fileName) throws Exception {
+		BufferedReader br = new BufferedReader(new FileReader(fileName));
+		int i = 0;
+		while (br.ready()) {
+			String ss = br.readLine();
+			instructionsString[i] = ss;
+			String[] s = ss.split(" ");
+			switch (s[0]) {
+			case "ADD":
+				instructions[i] = 0;
+				break;
+			case "SUB":
+				instructions[i] = 1;
+				break;
+			case "MUL":
+				instructions[i] = 2;
+				break;
+			case "LDI":
+				instructions[i] = 3;
+				break;
+			case "BEQZ":
+				instructions[i] = 4;
+				break;
+			case "AND":
+				instructions[i] = 5;
+				break;
+			case "OR":
+				instructions[i] = 6;
+				break;
+			case "JR":
+				instructions[i] = 7;
+				break;
+			case "SLC":
+				instructions[i] = 8;
+				break;
+			case "SRC":
+				instructions[i] = 9;
+				break;
+			case "LB":
+				instructions[i] = 10;
+				break;
+			case "SB":
+				instructions[i] = 11;
+				break;
+			}
+			instructions[i]<<=6;
+			int r1 = Integer.parseInt(s[1].substring(1));
+			instructions[i]|=r1;
+			instructions[i]<<=6;
+			int r2 = 0;
+			switch (s[0]) {
+			case "ADD":
+			case "SUB":
+			case "MUL":
+			case "AND":
+			case "OR":
+			case "JR":
+				r2 = Integer.parseInt(s[2].substring(1));
+				instructions[i] |= r2;
+				break;
+			case "LDI":
+			case "BEQZ":
+			case "SLC":
+			case "SRC":
+			case "LB":
+			case "SB":
+				r2 = Integer.parseInt(s[2]);
+				instructions[i] |= r2;
+				break;
+			}
+			i++;
+		}
+		br.close();
+	}
 
 	public void run() {
 		int c = 1;
 		while (true) {
 			if (pc >= 1024)
 				break;
+			
+			
+			
 			executing = decoding;
 			decoding = fetching;
 			fetching = instructions[pc++];
@@ -159,22 +240,110 @@ public class Main {
 	private void mul() {
 		int r2 = decodedInstruction[2];
 		int r1 = decodedInstruction[1];
-		int res = registers[r1]*registers[r2];
-		
-
+		int res = registers[r1] * registers[r2];
+		int x = registers[r1] & mask;
+		int y = registers[r2] & mask;
+		if (x * y > Byte.MAX_VALUE) {
+			sreg |= (1 << 4);
+		} else {
+			if ((sreg & (1 << 4)) != 0) {
+				sreg ^= (1 << 4);
+			}
+		}
+		int sign = res & (1 << 7);
+		if (sign == 0) {
+			if (res >= 0) {
+				if ((sreg & (1 << 3)) != 0) {
+					sreg ^= (1 << 3);
+				}
+			} else {
+				sreg |= (1 << 3);
+			}
+		} else {
+			if (res >= 0) {
+				sreg |= (1 << 3);
+			} else {
+				if ((sreg & (1 << 3)) != 0) {
+					sreg ^= (1 << 3);
+				}
+			}
+		}
+		nflag(res);
+		zflag(res);
+		registers[r1] = res & mask;
 	}
 
 	private void sub() {
 		int r2 = decodedInstruction[2];
 		int r1 = decodedInstruction[1];
-		registers[r1] -= registers[r2];
+		int res = registers[r1] - registers[r2];
+		int x = registers[r1] & mask;
+		int y = registers[r2] & mask;
+		if (x - y > Byte.MAX_VALUE) {
+			sreg |= (1 << 4);
+		} else {
+			if ((sreg & (1 << 4)) != 0) {
+				sreg ^= (1 << 4);
+			}
+		}
+		int sign = res & (1 << 7);
+		if (sign == 0) {
+			if (res >= 0) {
+				if ((sreg & (1 << 3)) != 0) {
+					sreg ^= (1 << 3);
+				}
+			} else {
+				sreg |= (1 << 3);
+			}
+		} else {
+			if (res >= 0) {
+				sreg |= (1 << 3);
+			} else {
+				if ((sreg & (1 << 3)) != 0) {
+					sreg ^= (1 << 3);
+				}
+			}
+		}
+		nflag(res);
+		zflag(res);
+		registers[r1] = res & mask;
 
 	}
 
 	private void add() {
 		int r2 = decodedInstruction[2];
 		int r1 = decodedInstruction[1];
-		registers[r1] += registers[r2];
+		int res = registers[r1] + registers[r2];
+		int x = registers[r1] & mask;
+		int y = registers[r2] & mask;
+		if (x + y > Byte.MAX_VALUE) {
+			sreg |= (1 << 4);
+		} else {
+			if ((sreg & (1 << 4)) != 0) {
+				sreg ^= (1 << 4);
+			}
+		}
+		int sign = res & (1 << 7);
+		if (sign == 0) {
+			if (res >= 0) {
+				if ((sreg & (1 << 3)) != 0) {
+					sreg ^= (1 << 3);
+				}
+			} else {
+				sreg |= (1 << 3);
+			}
+		} else {
+			if (res >= 0) {
+				sreg |= (1 << 3);
+			} else {
+				if ((sreg & (1 << 3)) != 0) {
+					sreg ^= (1 << 3);
+				}
+			}
+		}
+		nflag(res);
+		zflag(res);
+		registers[r1] = res & mask;
 	}
 
 	private void nflag(int result) {
@@ -194,15 +363,6 @@ public class Main {
 			}
 		} else {
 			sreg |= (1);
-		}
-	}
-	private void cflag(int result) {
-		if (result <= Byte.MAX_VALUE) {
-			if ((sreg & (1<<4)) != 0) {
-				sreg ^= (1<<4);
-			}
-		} else {
-			sreg |= (1<<4);
 		}
 	}
 }
