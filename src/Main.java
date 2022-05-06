@@ -13,6 +13,10 @@ public class Main {
 	int[] decodedInstruction = new int[3];
 	int mask = (1 << 8) - 1;
 	HashMap<Integer, String> instructionsMap = new HashMap<Integer, String>();
+	public static void main(String [] args) throws Exception {
+		Main m= new Main("test1.txt");
+		m.run();
+	}
 
 	public Main(String fileName) throws Exception {
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -20,6 +24,7 @@ public class Main {
 		while (br.ready()) {
 			String ss = br.readLine();
 			String[] s = ss.split(" ");
+			instructions[i]=0;
 			switch (s[0]) {
 			case "ADD":
 				instructions[i] = 0;
@@ -95,6 +100,7 @@ public class Main {
 
 			executing = decoding;
 			decoding = fetching;
+			int prevPC = pc;
 			if (pc < 1024)
 				fetching = instructions[pc++];
 			else
@@ -102,7 +108,7 @@ public class Main {
 			if (executing == null && decoding == null && fetching == null)
 				break;
 			System.out.println("Start of Cycle " + c);
-			System.out.println("Program Counter: binaryContent = " + extend(pc, 16) + " content = " + pc);
+			System.out.println("Program Counter: binaryContent = " + extend(prevPC, 16) + " content = " + prevPC);
 			if (executing != null) {
 				System.out.println("EXECUTING " + instructionsMap.get(executing) + " " + extend(executing, 16));
 				exec();
@@ -135,10 +141,12 @@ public class Main {
 			}
 
 			c++;
+			System.out.println();
+			
 		}
 		System.out.println();
-		System.out.println();
 		System.out.println("EXECUTION FINISHED!");
+		System.out.println();
 		int cc = (sreg & (1 << 4)) == 0 ? 0 : 1;
 		int v = (sreg & (1 << 3)) == 0 ? 0 : 1;
 		int n = (sreg & (1 << 2)) == 0 ? 0 : 1;
@@ -151,12 +159,14 @@ public class Main {
 		for (int i = 0; i < registers.length; i++) {
 			System.out.println("Register "+i+": binaryContent = " + extend(registers[i], 8) + " content = " + registers[i]);
 		}
+		System.out.println();
 		System.out.println("INSTRUCTIONS MEMORY");
 		for (int i = 0; i < instructions.length; i++) {
 			if(instructions[i]==null)
 				continue;
 			System.out.println("Instruction "+i+": binaryContent = " + extend(instructions[i], 16) + " content = " + instructionsMap.get(instructions[i]));
 		}
+		System.out.println();
 		System.out.println("DATA MEMORY");
 		for (int i = 0; i < data.length; i++) {
 			if(data[i]==null)
@@ -185,6 +195,16 @@ public class Main {
 		decodedInstruction[1] = r1;
 		// r2 or immediate at index 2
 		decodedInstruction[2] = (instruction % (1 << 6));
+		int imm= (instruction % (1 << 6));
+		int op=decodedInstruction[0];
+		if(op==3 || op==4 || op==8 || op==9) {
+			if((imm & (1 << 5)) !=0){
+				int x= ~0;
+				x = x << 6;
+				decodedInstruction[2] = imm | x;
+			}
+		}
+		
 	}
 
 	public void exec() {
@@ -317,7 +337,9 @@ public class Main {
 	private void ldi() {
 		int imm = decodedInstruction[2];
 		int r = decodedInstruction[1];
-		registers[r] = imm;
+	    registers[r] = imm ;
+		
+			
 	}
 
 	private void mul() {
@@ -471,13 +493,13 @@ public class Main {
 			System.out.println("Zero Flag Updated To 0");
 		} else {
 			sreg |= (1);
-			System.out.println("Zero Flag Updated To 0");
+			System.out.println("Zero Flag Updated To 1");
 		}
 	}
 
 	private void sflag(int x, int y, int op) {
 		if (op == 0) {
-			if (x + y > 0) {
+			if (x + y >= 0) {
 				if ((sreg & (2)) != 0) {
 					sreg ^= (2);
 				}
@@ -487,7 +509,7 @@ public class Main {
 				System.out.println("Sign Flag Updated To 1");
 			}
 		} else if (op == 1) {
-			if (x - y > 0) {
+			if (x - y >= 0) {
 				if ((sreg & (2)) != 0) {
 					sreg ^= (2);
 				}
@@ -497,7 +519,7 @@ public class Main {
 				System.out.println("Sign Flag Updated To 1");
 			}
 		} else {
-			if (x * y > 0) {
+			if (x * y >= 0) {
 				if ((sreg & (2)) != 0) {
 					sreg ^= (2);
 				}

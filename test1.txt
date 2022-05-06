@@ -1,0 +1,3 @@
+LDI R1 -32
+LDI R2 31
+ADD R1 R2
