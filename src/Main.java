@@ -14,7 +14,9 @@ public class Main {
 	HashMap<Integer, String> instructionsMap = new HashMap<Integer, String>();
 
 	public static void main(String[] args) throws Exception {
-		Main m = new Main("test.text");
+		Main m = new Main("test1.txt");
+		m.data[0]=64;
+		m.data[1]=-64;
 		m.run();
 	}
 
