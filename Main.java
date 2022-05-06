@@ -8,7 +8,7 @@ public class Main {
 	Short fetching;
 	Short decoding;
 	Short executing;
-	short[] decodedInstruction;
+	short[] decodedInstruction = new short [3] ;
 
 	public void run() {
 		int c = 1;
@@ -97,13 +97,17 @@ public class Main {
 	}
 
 	private void src() {
-		// TODO Auto-generated method stub
-
+		int r1 = decodedInstruction[1];
+		int imm = decodedInstruction[2];
+		int temp = r1 << (8 - imm);
+		r1 = (short)(r1 >> imm | temp );
 	}
 
 	private void slc() {
-		// TODO Auto-generated method stub
-
+		int r1 = decodedInstruction[1];
+		int imm = decodedInstruction[2];
+		int temp = r1 >> (8 - imm);
+		r1 = (int)(r1 << imm |temp);
 	}
 
 	
