@@ -15,8 +15,6 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		Main m = new Main("test1.txt");
-		m.data[0]=64;
-		m.data[1]=-64;
 		m.run();
 	}
 
