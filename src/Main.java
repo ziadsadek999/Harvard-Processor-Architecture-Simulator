@@ -13,22 +13,13 @@ public class Main {
 	int[] decodedInstruction = new int[3];
 	int mask = (1 << 8) - 1;
 	HashMap<Integer, String> instructionsMap = new HashMap<Integer, String>();
-	
-	public static void main(String[] args) throws Exception {
-		Main m = new Main("TEST.txt");
-		m.run();
-	}
 
 	public Main(String fileName) throws Exception {
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		int i = 0;
-		String ss = "";
-		while ((ss = br.readLine())!= null) {
-			if (ss.length() <= 1)
-				break;
+		while (br.ready()) {
+			String ss = br.readLine();
 			String[] s = ss.split(" ");
-			instructions[i] = 0;
-			
 			switch (s[0]) {
 			case "ADD":
 				instructions[i] = 0;
@@ -67,7 +58,6 @@ public class Main {
 				instructions[i] = 11;
 				break;
 			}
-			
 			instructions[i] <<= 6;
 			int r1 = Integer.parseInt(s[1].substring(1));
 			instructions[i] |= r1;
@@ -93,31 +83,26 @@ public class Main {
 				instructions[i] |= (r2 & ((1 << 6) - 1));
 				break;
 			}
-			
 			instructionsMap.put(instructions[i], ss);
 			i++;
-			
 		}
 		br.close();
 	}
 
 	public void run() {
 		int c = 1;
-		int prevPc = 0;
 		while (true) {
-			
+
 			executing = decoding;
 			decoding = fetching;
-			prevPc = pc;
 			if (pc < 1024)
 				fetching = instructions[pc++];
 			else
 				fetching = null;
 			if (executing == null && decoding == null && fetching == null)
 				break;
-			System.out.println();
 			System.out.println("Start of Cycle " + c);
-			System.out.println("Program Counter: binaryContent = " + extend(prevPc, 16) + " content = " + prevPc);
+			System.out.println("Program Counter: binaryContent = " + extend(pc, 16) + " content = " + pc);
 			if (executing != null) {
 				System.out.println("EXECUTING " + instructionsMap.get(executing) + " " + extend(executing, 16));
 				exec();
@@ -148,9 +133,8 @@ public class Main {
 				System.out.println("FETCHING " + extend(fetching, 16) + " From Instruction Memory");
 				System.out.println("Program Counter Updated To binaryContent = " + extend(pc, 16) + " content = " + pc);
 			}
-			
+
 			c++;
-			
 		}
 		System.out.println();
 		System.out.println();
@@ -487,7 +471,7 @@ public class Main {
 			System.out.println("Zero Flag Updated To 0");
 		} else {
 			sreg |= (1);
-			System.out.println("Zero Flag Updated To 1");
+			System.out.println("Zero Flag Updated To 0");
 		}
 	}
 
