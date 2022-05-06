@@ -1,14 +1,15 @@
 
 public class Main {
-	Short[] instructions = new Short[1024];
-	Byte[] data = new Byte[2048];
-	byte[] registers = new byte[64];
-	byte statusRegister = 0;
-	short pc = 0;
-	Short fetching;
-	Short decoding;
-	Short executing;
-	short[] decodedInstruction;
+	Integer[] instructions = new Integer[1024];
+	Integer[] data = new Integer[2048];
+	int[] registers = new int[64];
+	int sreg = 0;
+	int pc = 0;
+	Integer fetching;
+	Integer decoding;
+	Integer executing;
+	int[] decodedInstruction = new int[3];
+	int mask = (1 << 8) - 1;
 
 	public void run() {
 		int c = 1;
@@ -24,24 +25,24 @@ public class Main {
 				decode(decoding);
 			if (executing != null)
 				exec();
-			
+
 			c++;
 		}
 	}
 
-	public void decode(short instruction) {
+	public void decode(int instruction) {
 		// opcode at index 0
-		decodedInstruction[0] = (short) (instruction >> 12);
+		decodedInstruction[0] = (int) (instruction >> 12);
 		// r1 at index 1
-		short r1 = (short) (instruction >> 6);
-		r1 = (short) (r1 % (1 << 6));
+		int r1 = (int) (instruction >> 6);
+		r1 = (int) (r1 % (1 << 6));
 		decodedInstruction[1] = r1;
 		// r2 or immediate at index 2
-		decodedInstruction[2] = (short) (instruction % (1 << 6));
+		decodedInstruction[2] = (int) (instruction % (1 << 6));
 	}
 
 	public void exec() {
-		short opcode = decodedInstruction[0];
+		int opcode = decodedInstruction[0];
 		switch (opcode) {
 		case 0:
 			add();
@@ -83,84 +84,125 @@ public class Main {
 	}
 
 	private void sb() {
-		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1];
-		data[r2]=registers[r1];
+		int r2 = decodedInstruction[2];
+		int r1 = decodedInstruction[1];
+		data[r2] = registers[r1];
 
 	}
 
 	private void lb() {
-		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1];
-		registers[r1]=data[r2];
+		int r2 = decodedInstruction[2];
+		int r1 = decodedInstruction[1];
+		registers[r1] = data[r2];
 
 	}
 
 	private void src() {
-		// TODO Auto-generated method stub
-
+		int r1 = decodedInstruction[1];
+		int imm = decodedInstruction[2];
+		int temp = r1 << (8 - imm);
+		registers[r1] = (r1 >> imm | temp) & mask;
+		nflag(registers[r1]);
+		zflag(registers[r1]);
 	}
 
 	private void slc() {
-		// TODO Auto-generated method stub
-
+		int r1 = decodedInstruction[1];
+		int imm = decodedInstruction[2];
+		int temp = r1 >> (8 - imm);
+		registers[r1] = (r1 << imm | temp) & mask;
+		nflag(registers[r1]);
+		zflag(registers[r1]);
 	}
 
-	
 	private void jr() {
-		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1];
-		pc = Short.parseShort(Byte.toString(registers[r1]) + Byte.toString(registers[r2]));
-
+		int r1 = decodedInstruction[1];
+		int r2 = decodedInstruction[2];
+		String s1 = Integer.toBinaryString(registers[r1]);
+		String s2 = Integer.toBinaryString(registers[r2]);
+		while (s2.length() < 8) {
+			s2 = '0' + s2;
+		}
+		pc = Integer.parseInt(s1 + s2, 2);
 	}
 
 	private void or() {
-		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1];
-		registers[r1] |= registers[r2] ;
-
+		int r2 = decodedInstruction[2];
+		int r1 = decodedInstruction[1];
+		registers[r1] |= registers[r2];
+		nflag(registers[r1]);
+		zflag(registers[r1]);
 	}
 
 	private void and() {
-		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1];
+		int r2 = decodedInstruction[2];
+		int r1 = decodedInstruction[1];
 		registers[r1] &= registers[r2];
-
+		nflag(registers[r1]);
+		zflag(registers[r1]);
 	}
 
 	private void beqz() {
-		short imm = decodedInstruction[2];
-		short r = decodedInstruction[1];
+		int imm = decodedInstruction[2];
+		int r = decodedInstruction[1];
 		if (r == 0) {
-			pc = (short) (pc + 1 + imm);
+			pc = (pc + 1 + imm);
 		}
-
 	}
 
 	private void ldi() {
-		short imm = decodedInstruction[2];
-		short r = decodedInstruction[1];
-		registers[r] = (byte) imm;
+		int imm = decodedInstruction[2];
+		int r = decodedInstruction[1];
+		registers[r] = imm;
 	}
 
 	private void mul() {
-		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1];
-		registers[r1] *= registers[r2] ;
+		int r2 = decodedInstruction[2];
+		int r1 = decodedInstruction[1];
+		int res = registers[r1]*registers[r2];
+		
 
 	}
 
 	private void sub() {
-		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1];
-		registers[r1] -= registers[r2] ;
+		int r2 = decodedInstruction[2];
+		int r1 = decodedInstruction[1];
+		registers[r1] -= registers[r2];
 
 	}
 
 	private void add() {
-		short r2 = decodedInstruction[2];
-		short r1 = decodedInstruction[1];
-		registers[r1] += registers[r2] ;
+		int r2 = decodedInstruction[2];
+		int r1 = decodedInstruction[1];
+		registers[r1] += registers[r2];
 	}
 
+	private void nflag(int result) {
+		if ((result & (1 << 7)) == 0) {
+			if ((sreg & (1 << 2)) != 0) {
+				sreg ^= (1 << 2);
+			}
+		} else {
+			sreg |= (1 << 2);
+		}
+	}
+
+	private void zflag(int result) {
+		if (result != 0) {
+			if ((sreg & (1)) != 0) {
+				sreg ^= (1);
+			}
+		} else {
+			sreg |= (1);
+		}
+	}
+	private void cflag(int result) {
+		if (result <= Byte.MAX_VALUE) {
+			if ((sreg & (1<<4)) != 0) {
+				sreg ^= (1<<4);
+			}
+		} else {
+			sreg |= (1<<4);
+		}
+	}
 }
