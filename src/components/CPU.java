@@ -56,11 +56,19 @@ public class CPU {
 	}
 
 	public void vFlag(int v1, int v2, int res) {
-
+		if ((v1 & 1 << 7) == (v2 & 1 << 7) && (v2 & 1 << 7) != (res & 1 << 7)) {
+			SREG = Helper.setBit(SREG, 3);
+		} else {
+			SREG = Helper.clearBit(SREG, 3);
+		}
 	}
 
-	public void cFlag(int v1, int v2, int res) {
-		
+	public void cFlag(int res) {
+		if (res>=Byte.MAX_VALUE) {
+			SREG = Helper.setBit(SREG, 4);
+		} else {
+			SREG = Helper.clearBit(SREG, 4);
+		}
 	}
 
 	public int getPC() {
