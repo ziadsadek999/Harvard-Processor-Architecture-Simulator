@@ -1,7 +1,7 @@
 package instructions;
 
 import components.CPU;
-import memory.DataMemory;
+import utils.Helper;
 
 public class Add extends Instruction {
 
@@ -16,12 +16,12 @@ public class Add extends Instruction {
 		r1 &= DATA_MASK;
 		r2 &= DATA_MASK;
 		int res = r1+r2;
-		CPU.getInstance().cFlag(r1, r2, res);
+		CPU.getInstance().cFlag(res);
+		res = Helper.signExtend(res);
 		CPU.getInstance().vFlag(r1, r2, res);
 		CPU.getInstance().zFlag(res);
 		CPU.getInstance().nFlag(res);
 		CPU.getInstance().sFlag();
 		CPU.getInstance().writeRegister(getR1(), res);
 	}
-
 }
