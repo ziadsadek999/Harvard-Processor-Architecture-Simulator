@@ -18,12 +18,14 @@ public abstract class Instruction {
 
 	public void decode() {
 		this.opCode = binaryCode;
-		opCode >>= 12;
 		opCode &= OPCODE_MASK;
+		opCode >>= 12;
+		
 
 		this.R1 = binaryCode;
-		R1 >>= 6;
 		R1 &= R1_MASK;
+		R1 >>= 6;
+		
 
 		this.R2 = binaryCode;
 		this.R2 &= R2_MASK;
