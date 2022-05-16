@@ -2,6 +2,7 @@ package memory;
 
 import components.CPU;
 import instructions.Instruction;
+import utils.Helper;
 
 public class InstructionMemory {
 	private Instruction[] instructionMemory;
@@ -16,6 +17,9 @@ public class InstructionMemory {
 	
 	public Instruction fetch() {
 		int PC = CPU.getInstance().getPC();
+		if(PC <0||PC>1023) {
+			return null;
+		}
 		CPU.getInstance().setPC(PC+1);
 		return instructionMemory[PC];
 	}
@@ -24,11 +28,20 @@ public class InstructionMemory {
 		instructionMemory[++lastInstruction] = instruction;
 	}
 	
-	public InstructionMemory getInstance() {
+	public static InstructionMemory getInstance() {
 		return instance;
 	}
 	
 	public int getLastInstruction() {
 		return lastInstruction;
+	}
+	public void print() {
+		System.out.println("INSTRUCTIONS MEMORY");
+		for (int i = 0; i < instructionMemory.length; i++) {
+			if (instructionMemory[i] == null)
+				continue;
+			System.out.println("Instruction " + i + ": binaryContent = " + Helper.StringExtend(instructionMemory[i].getBinaryCode(), 16) + " content = "
+					+ instructionMemory[i]);
+		}
 	}
 }

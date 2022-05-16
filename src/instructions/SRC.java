@@ -7,6 +7,7 @@ public class SRC extends Instruction {
 
 	public SRC(int binaryCode) {
 		super(binaryCode);
+		setRType(false);
 	}
 
 	@Override

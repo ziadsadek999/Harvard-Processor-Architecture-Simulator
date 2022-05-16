@@ -7,6 +7,7 @@ public class SLC extends Instruction {
 
 	public SLC(int binaryCode) {
 		super(binaryCode);
+		setRType(false);
 	}
 
 	@Override
@@ -14,7 +15,7 @@ public class SLC extends Instruction {
 		int r1 = CPU.getInstance().readRegister(getR1());
 		int imm = getR2();
 		r1 &= DATA_MASK;
-		int res = r1<<imm | r1>>8-imm;
+		int res = r1 << imm | r1 >> 8 - imm;
 		res = Helper.signExtend(res);
 		CPU.getInstance().nFlag(res);
 		CPU.getInstance().zFlag(res);
