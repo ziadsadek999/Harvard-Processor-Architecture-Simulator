@@ -1,6 +1,10 @@
 package components;
 
+import instructions.ITypeInstruction;
 import instructions.Instruction;
+import instructions.RTypeInstruction;
+import instructions.SLC;
+import instructions.SRC;
 import memory.DataMemory;
 import memory.InstructionMemory;
 import utils.Helper;
@@ -52,20 +56,7 @@ public class CPU {
 			}
 			if (decoding != null) {
 				decoding.decode();
-				String opCode = Helper.StringExtend(decoding.getOpCode(), 4);
-				String r1 = Helper.StringExtend(decoding.getR1(), 6);
-				String r2 = Helper.StringExtend(decoding.getR2(), 6);
-				int r1Content = registers[decoding.getR1()];
-				int r2Content = decoding.hasImmediate() ? decoding.getR2() : registers[decoding.getR2()];
-				String r1ContentBinary = Helper.StringExtend(r1Content, 8);
-				String r2ContentBinary = Helper.StringExtend(r2Content, 8);
-				System.out.println("Decoded Instruction For Next Cycle:-");
-				System.out.println("OPcode = " + opCode + "  R1 = " + r1 + " R2/IMM/OFF = " + r2);
-				System.out.println("OPcode Value = " + decoding.getOpCode() + "R1 index = " + decoding.getR1()
-						+ " R2 index/IMM = " + decoding.getR2());
-				System.out.println("Inputs For Next Cycle:-");
-				System.out.println("R1: binaryContent = " + r1ContentBinary + "  content = " + r1Content);
-				System.out.println("R2: binaryContent = " + r2ContentBinary + "  content = " + r2Content);
+				
 			}
 			if (fetching != null) {
 				System.out.println(

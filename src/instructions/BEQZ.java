@@ -3,7 +3,7 @@ package instructions;
 import components.CPU;
 import utils.Helper;
 
-public class BEQZ extends Instruction {
+public class BEQZ extends ITypeInstruction {
 	
 	public BEQZ(int binaryCode) {
 		super(binaryCode);
@@ -12,8 +12,8 @@ public class BEQZ extends Instruction {
 
 	@Override
 	public void execute() {
-		int r1 = CPU.getInstance().readRegister(getR1());
-		int imm  = Helper.signExtendImm(getR2());
+		int r1 = getR1Content();
+		int imm  = getImm();
 		int PC = CPU.getInstance().getPC();
 		r1 &= DATA_MASK;
 		if (r1 == 0) {

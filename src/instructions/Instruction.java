@@ -1,7 +1,9 @@
 package instructions;
 
-public abstract class Instruction {
+import components.CPU;
 
+public abstract class Instruction {
+	
 	public static final int R2_MASK = (1 << 6) - 1;
 	public static final int R1_MASK = (R2_MASK) << 6;
 	public static final int OPCODE_MASK = ((1 << 4) - 1) << 12;
@@ -11,6 +13,7 @@ public abstract class Instruction {
 	private int opCode;
 	private int R1;
 	private int R2;
+	private int R1Content;
 	private String instruction;
 	private boolean RType;
 
@@ -30,6 +33,8 @@ public abstract class Instruction {
 
 		this.R2 = binaryCode;
 		this.R2 &= R2_MASK;
+		
+		R1Content = CPU.getInstance().readRegister(getR1());
 	}
 
 	public abstract void execute();
@@ -49,6 +54,11 @@ public abstract class Instruction {
 	public int getR2() {
 		return R2;
 	}
+	
+	public int getR1Content() {
+		return R1Content;
+	}
+
 
 	public String toString() {
 		return instruction;

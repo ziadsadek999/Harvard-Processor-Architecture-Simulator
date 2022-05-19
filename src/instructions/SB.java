@@ -4,7 +4,7 @@ import components.CPU;
 import memory.DataMemory;
 import utils.Helper;
 
-public class SB extends Instruction {
+public class SB extends ITypeInstruction {
 
 	public SB(int binaryCode) {
 		super(binaryCode);
@@ -13,8 +13,8 @@ public class SB extends Instruction {
 
 	@Override
 	public void execute() {
-		int r1= CPU.getInstance().readRegister(getR1());
-		int address = Helper.signExtendImm(getR2());
+		int r1= getR1Content();
+		int address = getImm();
 		DataMemory.getInstance().writeAddress(address, r1);
 	}
 

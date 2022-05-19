@@ -3,7 +3,7 @@ package instructions;
 import components.CPU;
 import utils.Helper;
 
-public class Or extends Instruction {
+public class Or extends RTypeInstruction {
 
 	public Or(int binaryCode) {
 		super(binaryCode);
@@ -11,8 +11,8 @@ public class Or extends Instruction {
 
 	@Override
 	public void execute() {
-		int r1 = CPU.getInstance().readRegister(getR1());
-		int r2 = CPU.getInstance().readRegister(getR2());
+		int r1 = getR1Content();
+		int r2 = getR2Content();
 		r1 &= DATA_MASK;
 		r2 &= DATA_MASK;
 		int res = r1 | r2;

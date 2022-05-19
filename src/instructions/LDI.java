@@ -3,7 +3,7 @@ package instructions;
 import components.CPU;
 import utils.Helper;
 
-public class LDI extends Instruction{
+public class LDI extends ITypeInstruction{
 
 	public LDI(int binaryCode) {
 		super(binaryCode);
@@ -12,7 +12,7 @@ public class LDI extends Instruction{
 	
 	@Override
 	public void execute() {
-		int	imm = Helper.signExtendImm(getR2());
+		int	imm = getImm();
 		CPU.getInstance().writeRegister(getR1(), imm);
 	}
 

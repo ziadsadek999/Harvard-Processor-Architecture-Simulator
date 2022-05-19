@@ -3,7 +3,7 @@ package instructions;
 import components.CPU;
 import utils.Helper;
 
-public class Mul extends Instruction {
+public class Mul extends RTypeInstruction {
 
 	public Mul(int binaryCode) {
 		super(binaryCode);
@@ -11,8 +11,8 @@ public class Mul extends Instruction {
 
 	@Override
 	public void execute() {
-		int r1 = CPU.getInstance().readRegister(getR1());
-		int r2 = CPU.getInstance().readRegister(getR2());
+		int r1 = getR1Content();
+		int r2 = getR2Content();
 		int res = r1 * r2;
 		res = Helper.signExtend(res);
 		CPU.getInstance().zFlag(res);

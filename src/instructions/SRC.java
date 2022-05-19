@@ -3,7 +3,7 @@ package instructions;
 import components.CPU;
 import utils.Helper;
 
-public class SRC extends Instruction {
+public class SRC extends ITypeInstruction {
 
 	public SRC(int binaryCode) {
 		super(binaryCode);
@@ -12,7 +12,7 @@ public class SRC extends Instruction {
 
 	@Override
 	public void execute() {
-		int r1 = CPU.getInstance().readRegister(getR1());
+		int r1 = getR1Content();
 		int imm = getR2();
 		r1 &= DATA_MASK;
 		int res = r1>>>imm | r1<<8-imm;

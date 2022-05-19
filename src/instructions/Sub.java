@@ -3,7 +3,7 @@ package instructions;
 import components.CPU;
 import utils.Helper;
 
-public class Sub extends Instruction {
+public class Sub extends RTypeInstruction {
 
 	public Sub(int binaryCode) {
 		super(binaryCode);
@@ -11,8 +11,8 @@ public class Sub extends Instruction {
 
 	@Override
 	public void execute() {
-		int r1 = CPU.getInstance().readRegister(getR1());
-		int r2 = CPU.getInstance().readRegister(getR2());
+		int r1 = getR1Content();
+		int r2 = getR2Content();
 		int expected = r1 - r2;
 		r1 &= DATA_MASK;
 		r2 &= DATA_MASK;
