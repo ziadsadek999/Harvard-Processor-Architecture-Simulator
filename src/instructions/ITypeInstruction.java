@@ -25,13 +25,15 @@ public abstract class ITypeInstruction extends Instruction {
 		}
 		String r1ContentBinary = Helper.StringExtend(r1Content, 8);
 		String r2ContentBinary = Helper.StringExtend(r2Content, 8);
-		System.out.println("Decoded Instruction For Next Cycle:-");
-		System.out.println("OPcode = " + opCode + "  R1 = " + r1 + " R2/IMM/OFF = " + r2);
-		System.out.println("OPcode Value = " + this.getOpCode() + "R1 index = " + this.getR1()
+		CPU.getInstance().println("");
+		CPU.getInstance().println("");
+		CPU.getInstance().println("Decoded Instruction For Next Cycle:-");
+		CPU.getInstance().println("OPcode = " + opCode + "  R1 = " + r1 + " R2/IMM/OFF = " + r2);
+		CPU.getInstance().println("OPcode Value = " + this.getOpCode() + "R1 index = " + this.getR1()
 				+ " R2 index/IMM = " + this.getImm());
-		System.out.println("Inputs For Next Cycle:-");
-		System.out.println("R1: binaryContent = " + r1ContentBinary + "  content = " + r1Content);
-		System.out.println("IMM/Address: binaryContent = " + r2ContentBinary + "  content = " + r2Content);
+		CPU.getInstance().println("Inputs For Next Cycle:-");
+		CPU.getInstance().println("R1: binaryContent = " + r1ContentBinary + "  content = " + r1Content);
+		CPU.getInstance().println("IMM/Address: binaryContent = " + r2ContentBinary + "  content = " + r2Content);
 	}
 
 

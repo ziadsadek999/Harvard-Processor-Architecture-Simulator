@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import instructions.*;
@@ -26,6 +27,8 @@ public class Parser {
 		while (bufferedreader.ready()) {
 			String inputLine = bufferedreader.readLine();
 			String[] line = inputLine.split(" ");
+			if (line.length != 3)
+				continue;
 			int binaryCode = opcode.get(line[0]);
 			int x = binaryCode;
 			binaryCode <<= 12;
@@ -37,7 +40,7 @@ public class Parser {
 				r2 = Integer.parseInt(line[2]);
 			}
 			r1 <<= 6;
-			r2&=(1<<6)-1;
+			r2 &= (1 << 6) - 1;
 			binaryCode |= r1;
 			binaryCode |= r2;
 			Instruction instruction;

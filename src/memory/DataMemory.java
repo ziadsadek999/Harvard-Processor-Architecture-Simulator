@@ -1,5 +1,6 @@
 package memory;
 
+import components.CPU;
 import utils.Helper;
 
 public class DataMemory {
@@ -17,10 +18,12 @@ public class DataMemory {
 	}
 
 	public void writeAddress(int address, int data) {
-		System.out.println("WRITING BACK TO DATA MEMORY ADDRESS: " + address);
-		System.out.println("MEMORY ADDRESS " + address + " Content Updated From binaryContent = "
-				+ Helper.StringExtend(dataMemory[address], 8) + " content = " + (dataMemory[address]==null?0:dataMemory[address])
-				+ " To binaryContent = " + Helper.StringExtend(data, 8) + " content = " + data);
+		CPU.getInstance().println("WRITING BACK TO DATA MEMORY ADDRESS: " + address);
+		CPU.getInstance()
+				.println("MEMORY ADDRESS " + address + " Content Updated From binaryContent = "
+						+ Helper.StringExtend(dataMemory[address], 8) + " content = "
+						+ (dataMemory[address] == null ? 0 : dataMemory[address]) + " To binaryContent = "
+						+ Helper.StringExtend(data, 8) + " content = " + data);
 		dataMemory[address] = Helper.signExtend(data);
 	}
 
@@ -29,11 +32,11 @@ public class DataMemory {
 	}
 
 	public void print() {
-		System.out.println("DATA MEMORY");
+		CPU.getInstance().println("DATA MEMORY");
 		for (int i = 0; i < dataMemory.length; i++) {
 			if (dataMemory[i] == null)
 				continue;
-			System.out.println("Data address " + i + ": binaryContent = " + Helper.StringExtend(dataMemory[i], 8)
+			CPU.getInstance().println("Data address " + i + ": binaryContent = " + Helper.StringExtend(dataMemory[i], 8)
 					+ " content = " + dataMemory[i]);
 		}
 	}
