@@ -77,7 +77,7 @@ public class CPU {
 		CPU.getInstance().println("Start of Cycle " + cycle);
 		CPU.getInstance().println(
 				"Program Counter: binaryContent = " + Helper.StringExtend(PC - 1, 16) + " content = " + (PC - 1));
-
+		CPU.getInstance().println("");
 		if (executing != null) {
 			CPU.getInstance().println(
 					"EXECUTING " + executing + " MACHINE CODE: " + Helper.StringExtend(executing.getBinaryCode(), 16));
@@ -86,19 +86,20 @@ public class CPU {
 					.println("Status Register: " + Helper.StringExtend(SREG, 8) + " C=" + Helper.getBit(SREG, 4) + " V="
 							+ Helper.getBit(SREG, 3) + " N=" + Helper.getBit(SREG, 2) + " S=" + Helper.getBit(SREG, 1)
 							+ " Z=" + Helper.getBit(SREG, 0));
+			CPU.getInstance().println("");
 		}
 		if (decoding != null) {
 			decoding.decode();
-
+			CPU.getInstance().println("");
 		}
 		if (fetching != null) {
 			CPU.getInstance().println(
 					"FETCHING " + Helper.StringExtend(fetching.getBinaryCode(), 16) + " From Instruction Memory");
 			CPU.getInstance()
 					.println("Program Counter: binaryContent = " + Helper.StringExtend(PC, 16) + " content = " + (PC));
+			CPU.getInstance().println("");
 		}
 		cycle++;
-		CPU.getInstance().println("");
 		return false;
 	}
 
@@ -120,10 +121,8 @@ public class CPU {
 			CPU.getInstance().println("Start of Cycle " + cycle);
 			CPU.getInstance().println(
 					"Program Counter: binaryContent = " + Helper.StringExtend(PC - 1, 16) + " content = " + (PC - 1));
-
+			CPU.getInstance().println("");
 			if (executing != null) {
-				CPU.getInstance().println("");
-				CPU.getInstance().println("");
 				CPU.getInstance().println("EXECUTING " + executing + " MACHINE CODE: "
 						+ Helper.StringExtend(executing.getBinaryCode(), 16));
 				executing.execute();
@@ -131,21 +130,20 @@ public class CPU {
 						.println("Status Register: " + Helper.StringExtend(SREG, 8) + " C=" + Helper.getBit(SREG, 4)
 								+ " V=" + Helper.getBit(SREG, 3) + " N=" + Helper.getBit(SREG, 2) + " S="
 								+ Helper.getBit(SREG, 1) + " Z=" + Helper.getBit(SREG, 0));
+				CPU.getInstance().println("");
 			}
 			if (decoding != null) {
 				decoding.decode();
-
+				CPU.getInstance().println("");
 			}
 			if (fetching != null) {
-				CPU.getInstance().println("");
-				CPU.getInstance().println("");
 				CPU.getInstance().println(
 						"FETCHING " + Helper.StringExtend(fetching.getBinaryCode(), 16) + " From Instruction Memory");
 				CPU.getInstance().println(
 						"Program Counter: binaryContent = " + Helper.StringExtend(PC, 16) + " content = " + (PC));
+				CPU.getInstance().println("");
 			}
 			cycle++;
-			CPU.getInstance().println("");
 		}
 		CPU.getInstance().println("EXECUTION FINISHED!");
 		CPU.getInstance().println("REGISTERS");

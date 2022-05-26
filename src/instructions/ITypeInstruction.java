@@ -25,8 +25,6 @@ public abstract class ITypeInstruction extends Instruction {
 		}
 		String r1ContentBinary = Helper.StringExtend(r1Content, 8);
 		String r2ContentBinary = Helper.StringExtend(r2Content, 8);
-		CPU.getInstance().println("");
-		CPU.getInstance().println("");
 		CPU.getInstance().println("Decoded Instruction For Next Cycle:-");
 		CPU.getInstance().println("OPcode = " + opCode + "  R1 = " + r1 + " R2/IMM/OFF = " + r2);
 		CPU.getInstance().println("OPcode Value = " + this.getOpCode() + " R1 index = " + this.getR1()
