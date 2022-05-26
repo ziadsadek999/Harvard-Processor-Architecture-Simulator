@@ -27,6 +27,7 @@ public class CPU {
 	private MainFrame window;
 	private TextArea log;
 	private static final CPU instance = new CPU();
+	private boolean flush;
 
 	public static void main(String[] args) throws Exception {
 		CPU.getInstance().window = new MainFrame();
@@ -38,6 +39,7 @@ public class CPU {
 		this.PC = 0;
 		this.SREG = 0;
 		cycle = 1;
+		flush = false;
 	}
 
 	public boolean runNextInstruction() {
@@ -131,6 +133,11 @@ public class CPU {
 				CPU.getInstance().println(
 						"Program Counter: binaryContent = " + Helper.StringExtend(PC, 16) + " content = " + (PC));
 			}
+			if (flush) {
+				fetching = null;
+				decoding = null;
+				flush = false;
+			}
 			cycle++;
 			CPU.getInstance().println("");
 		}
@@ -154,9 +161,7 @@ public class CPU {
 	}
 
 	public void flush() {
-		CPU.getInstance().println("INSTRUCTIONS IN THE DECODING AND FETCHING STATES ARE FLUSHED");
-		fetching = null;
-		decoding = null;
+		flush = true;
 	}
 
 	public int readRegister(int idx) {
