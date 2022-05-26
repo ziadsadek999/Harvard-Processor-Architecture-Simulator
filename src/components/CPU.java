@@ -43,6 +43,12 @@ public class CPU {
 	}
 
 	public boolean runNextInstruction() {
+		if (flush) {
+			fetching = null;
+			decoding = null;
+			executing = null;
+			flush = false;
+		}
 		executing = decoding;
 		decoding = fetching;
 		fetching = InstructionMemory.getInstance().fetch();
@@ -97,8 +103,13 @@ public class CPU {
 	}
 
 	public void runAll() throws Exception {
-
 		while (true) {
+			if (flush) {
+				fetching = null;
+				decoding = null;
+				executing = null;
+				flush = false;
+			}
 			executing = decoding;
 			decoding = fetching;
 			fetching = InstructionMemory.getInstance().fetch();
@@ -132,11 +143,6 @@ public class CPU {
 						"FETCHING " + Helper.StringExtend(fetching.getBinaryCode(), 16) + " From Instruction Memory");
 				CPU.getInstance().println(
 						"Program Counter: binaryContent = " + Helper.StringExtend(PC, 16) + " content = " + (PC));
-			}
-			if (flush) {
-				fetching = null;
-				decoding = null;
-				flush = false;
 			}
 			cycle++;
 			CPU.getInstance().println("");
@@ -244,7 +250,7 @@ public class CPU {
 		this.SREG = 0;
 		cycle = 1;
 		flush = false;
-		
+
 	}
 
 	public int getPC() {

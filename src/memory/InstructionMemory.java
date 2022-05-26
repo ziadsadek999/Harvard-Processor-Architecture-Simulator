@@ -26,6 +26,7 @@ public class InstructionMemory {
 
 	public void addInstruction(Instruction instruction) {
 		instructionMemory[++lastInstruction] = instruction;
+		instruction.setAddress(lastInstruction);
 	}
 
 	public static InstructionMemory getInstance() {
@@ -41,11 +42,13 @@ public class InstructionMemory {
 		for (int i = 0; i < instructionMemory.length; i++) {
 			if (instructionMemory[i] == null)
 				continue;
-			CPU.getInstance().println("Instruction " + i + ": binaryContent = "
-					+ Helper.StringExtend(instructionMemory[i].getBinaryCode(), 16) + " content = "
-					+ instructionMemory[i]);
+			CPU.getInstance()
+					.println("Instruction " + i + ": binaryContent = "
+							+ Helper.StringExtend(instructionMemory[i].getBinaryCode(), 16) + " content = "
+							+ instructionMemory[i]);
 		}
 	}
+
 	public void reset() {
 		this.instructionMemory = new Instruction[1024];
 		this.lastInstruction = -1;

@@ -8,7 +8,7 @@ public abstract class Instruction {
 	public static final int R1_MASK = (R2_MASK) << 6;
 	public static final int OPCODE_MASK = ((1 << 4) - 1) << 12;
 	public static final int DATA_MASK = (1 << 8) - 1;
-
+	private int address;
 	private int binaryCode;
 	private int opCode;
 	private int R1;
@@ -21,7 +21,7 @@ public abstract class Instruction {
 		this.binaryCode = binaryCode;
 		setRType(true);
 	}
-
+	
 	public void decode() {
 		this.opCode = binaryCode;
 		opCode &= OPCODE_MASK;
@@ -74,5 +74,11 @@ public abstract class Instruction {
 
 	public void setRType(boolean rType) {
 		RType = rType;
+	}
+	public void setAddress(int address) {
+		this.address = address;
+	}
+	public int getAddress() {
+		return address;
 	}
 }

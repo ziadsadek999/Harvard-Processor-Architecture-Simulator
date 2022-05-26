@@ -29,7 +29,7 @@ public abstract class ITypeInstruction extends Instruction {
 		CPU.getInstance().println("");
 		CPU.getInstance().println("Decoded Instruction For Next Cycle:-");
 		CPU.getInstance().println("OPcode = " + opCode + "  R1 = " + r1 + " R2/IMM/OFF = " + r2);
-		CPU.getInstance().println("OPcode Value = " + this.getOpCode() + "R1 index = " + this.getR1()
+		CPU.getInstance().println("OPcode Value = " + this.getOpCode() + " R1 index = " + this.getR1()
 				+ " R2 index/IMM = " + this.getImm());
 		CPU.getInstance().println("Inputs For Next Cycle:-");
 		CPU.getInstance().println("R1: binaryContent = " + r1ContentBinary + "  content = " + r1Content);

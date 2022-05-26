@@ -17,6 +17,7 @@ public class JR extends RTypeInstruction {
 		r1 <<= 8;
 		int res = r1 | r2;
 		CPU.getInstance().setPC(res);
+		CPU.getInstance().flush();
 	}
 
 }
