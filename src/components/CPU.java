@@ -95,8 +95,6 @@ public class CPU {
 		if (fetching != null) {
 			CPU.getInstance().println(
 					"FETCHING " + Helper.StringExtend(fetching.getBinaryCode(), 16) + " From Instruction Memory");
-			CPU.getInstance()
-					.println("Program Counter: binaryContent = " + Helper.StringExtend(PC, 16) + " content = " + (PC));
 			CPU.getInstance().println("");
 		}
 		cycle++;
@@ -151,8 +149,6 @@ public class CPU {
 				.println("Status Register: " + Helper.StringExtend(SREG, 8) + " C=" + Helper.getBit(SREG, 4) + " V="
 						+ Helper.getBit(SREG, 3) + " N=" + Helper.getBit(SREG, 2) + " S=" + Helper.getBit(SREG, 1)
 						+ " Z=" + Helper.getBit(SREG, 0));
-		CPU.getInstance()
-				.println("Program Counter: binaryContent = " + Helper.StringExtend(PC, 16) + " content = " + PC);
 		for (int i = 0; i < registers.length; i++) {
 			CPU.getInstance().println("Register " + i + ": binaryContent = " + Helper.StringExtend(registers[i], 8)
 					+ " content = " + registers[i]);
@@ -219,7 +215,7 @@ public class CPU {
 	}
 
 	public void vFlag(int expected, int res) {
-		if ((expected & (1 << 7)) != (res & (1 << 7))) {
+		if ((expected & (1 << 31)) != (res & (1 << 7))) {
 			SREG = Helper.setBit(SREG, 3);
 			CPU.getInstance().println("Overflow Flag Updated To 1");
 
@@ -248,7 +244,9 @@ public class CPU {
 		this.SREG = 0;
 		cycle = 1;
 		flush = false;
-
+		executing = null;
+		fetching = null;
+		decoding = null;
 	}
 
 	public int getPC() {
@@ -257,6 +255,7 @@ public class CPU {
 
 	public void setPC(int pC) {
 		PC = pC;
+
 	}
 
 	public int getSREG() {

@@ -25,7 +25,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	public MainFrame() {
 		codeRead = false;
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setTitle("Neptune Simulator");
+		setTitle("Saturn Simulator");
 		setMinimumSize(new Dimension(500, 500));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		mainPanel = new JPanel();

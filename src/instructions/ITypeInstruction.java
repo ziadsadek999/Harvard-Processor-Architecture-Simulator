@@ -20,7 +20,7 @@ public abstract class ITypeInstruction extends Instruction {
 		String r2 = Helper.StringExtend(this.getR2(), 6);
 		int r1Content = this.getR1Content();
 		int r2Content = imm;
-		if(this instanceof SLC || this instanceof SRC) {
+		if(this instanceof SLC || this instanceof SRC || this instanceof LB|| this instanceof SB) {
 			r2Content = this.getR2();
 		}
 		String r1ContentBinary = Helper.StringExtend(r1Content, 8);

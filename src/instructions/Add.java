@@ -18,8 +18,8 @@ public class Add extends RTypeInstruction {
 		r2 &= DATA_MASK;
 		int res = r1 + r2;
 		CPU.getInstance().cFlag(res);
-		res = Helper.signExtend(res);
-		CPU.getInstance().vFlag(expected, res);
+		res = Helper.signExtend(expected & DATA_MASK);
+		CPU.getInstance().vFlag(expected, expected & DATA_MASK);
 		CPU.getInstance().zFlag(res);
 		CPU.getInstance().nFlag(res);
 		CPU.getInstance().sFlag();

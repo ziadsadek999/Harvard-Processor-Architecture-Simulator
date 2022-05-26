@@ -14,10 +14,11 @@ public class BEQZ extends ITypeInstruction {
 	public void execute() {
 		int r1 = getR1Content();
 		int imm = getImm();
-		int PC = CPU.getInstance().getPC();
 		r1 &= DATA_MASK;
 		if (r1 == 0) {
-			CPU.getInstance().setPC(getAddress() + 1 + imm);
+			int pc = getAddress() + 1 + imm;
+			CPU.getInstance().setPC(pc);
+			CPU.getInstance().println("PC value updated to: " + pc + " Binary content: " + Helper.StringExtend(pc, 16));
 			CPU.getInstance().flush();
 		}
 	}

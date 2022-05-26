@@ -14,12 +14,8 @@ public class Sub extends RTypeInstruction {
 		int r1 = getR1Content();
 		int r2 = getR2Content();
 		int expected = r1 - r2;
-		r1 &= DATA_MASK;
-		r2 &= DATA_MASK;
-		int res = r1 - r2;
-		CPU.getInstance().cFlag(res);
-		res = Helper.signExtend(res);
-		CPU.getInstance().vFlag(expected, res);
+		int res = Helper.signExtend(expected & DATA_MASK);
+		CPU.getInstance().vFlag(expected, expected & DATA_MASK);
 		CPU.getInstance().zFlag(res);
 		CPU.getInstance().nFlag(res);
 		CPU.getInstance().sFlag();
