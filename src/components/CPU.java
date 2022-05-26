@@ -170,7 +170,7 @@ public class CPU {
 						+ Helper.StringExtend(registers[idx], 8) + " content = " + registers[idx]
 						+ " To binaryContent = " + Helper.StringExtend(data, 8) + " content = " + data);
 		registers[idx] = Helper.signExtend(data);
-		window.registers[idx].setText("R"+idx+": 0b"+Helper.StringExtend(data, 8)+"/"+data);
+		window.registers[idx].setText("R" + idx + ": 0b" + Helper.StringExtend(data, 8) + "/" + data);
 	}
 
 	public void zFlag(int value) {
@@ -222,7 +222,7 @@ public class CPU {
 	}
 
 	public void cFlag(int res) {
-		if (res >= Byte.MAX_VALUE) {
+		if ((res & (1 << 8)) != 0) {
 			SREG = Helper.setBit(SREG, 4);
 			CPU.getInstance().println("Carry Flag Updated To 1");
 
