@@ -46,4 +46,8 @@ public class InstructionMemory {
 					+ instructionMemory[i]);
 		}
 	}
+	public void reset() {
+		this.instructionMemory = new Instruction[1024];
+		this.lastInstruction = -1;
+	}
 }

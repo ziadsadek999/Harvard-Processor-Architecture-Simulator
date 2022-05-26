@@ -238,6 +238,15 @@ public class CPU {
 		}
 	}
 
+	public void reset() {
+		this.registers = new int[64];
+		this.PC = 0;
+		this.SREG = 0;
+		cycle = 1;
+		flush = false;
+		
+	}
+
 	public int getPC() {
 		return PC;
 	}

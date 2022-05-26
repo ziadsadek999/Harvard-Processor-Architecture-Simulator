@@ -1,4 +1,1 @@
-LDI R0 5
-LDI R1 10
-ADD R1 R0
 

@@ -7,6 +7,8 @@ import java.io.*;
 import javax.swing.*;
 
 import components.CPU;
+import memory.DataMemory;
+import memory.InstructionMemory;
 import utils.*;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -28,7 +30,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1, 2));
-		code = new TextArea("Enter Your Code Here");
+		code = new TextArea();
 		code.setFont(new Font("Calisto MT", 0, 22));
 		code.setBackground(new Color(16, 16, 24));
 		code.setForeground(new Color(215, 65, 167));
@@ -58,8 +60,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		buttonPanel.add(reset);
 		right.add(buttonPanel);
 		TextArea title = new TextArea("REGISTERS", 1, 20, TextArea.SCROLLBARS_NONE);
-        title.setBackground(new Color(3, 3, 10));
-        title.setForeground(new Color(100, 100, 100));
+		title.setBackground(new Color(3, 3, 10));
+		title.setForeground(new Color(100, 100, 100));
 		title.setEditable(false);
 		right.add(title);
 		JPanel rightBottom = new JPanel();
@@ -82,13 +84,13 @@ public class MainFrame extends JFrame implements ActionListener {
 			registers[i + 48].setEditable(false);
 			registers[i + 32].setEditable(false);
 			registers[i].setBackground(new Color(3, 3, 10));
-		    registers[i + 16].setBackground(new Color(3, 3, 10));
+			registers[i + 16].setBackground(new Color(3, 3, 10));
 			registers[i + 32].setBackground(new Color(3, 3, 10));
 			registers[i + 48].setBackground(new Color(3, 3, 10));
 			registers[i].setForeground(new Color(100, 100, 100));
-		    registers[i + 16].setForeground(new Color(100, 100, 100));
+			registers[i + 16].setForeground(new Color(100, 100, 100));
 			registers[i + 32].setForeground(new Color(100, 100, 100));
-			registers[i + 48].setForeground(new Color(100, 100, 100));	
+			registers[i + 48].setForeground(new Color(100, 100, 100));
 			quadrable.add(registers[i]);
 			quadrable.add(registers[i + 16]);
 			quadrable.add(registers[i + 32]);
@@ -153,7 +155,12 @@ public class MainFrame extends JFrame implements ActionListener {
 			nextLine.setEnabled(true);
 			code.setEditable(true);
 			codeRead = false;
-			
+			for (int i = 0; i < registers.length; i++) {
+				registers[i].setText("R" + (i) + ": 0b00000000/0");
+			}
+			CPU.getInstance().reset();
+			InstructionMemory.getInstance().reset();
+			DataMemory.getInstance().reset();
 		}
 
 	}

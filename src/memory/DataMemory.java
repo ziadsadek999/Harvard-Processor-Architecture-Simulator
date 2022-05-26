@@ -40,4 +40,7 @@ public class DataMemory {
 					+ " content = " + dataMemory[i]);
 		}
 	}
+	public void reset() {
+		dataMemory = new Integer[2048];
+	}
 }
