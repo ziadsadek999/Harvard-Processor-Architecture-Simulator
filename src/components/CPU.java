@@ -215,7 +215,9 @@ public class CPU {
 	}
 
 	public void vFlag(int expected, int res) {
-		if ((expected & (1 << 31)) != (res & (1 << 7))) {
+		int sign1 = (expected & (1 << 31)) == 0 ? 0 : 1;
+		int sign2 = (res & (1 << 7)) == 0 ? 0 : 1;
+		if (sign1 != sign2) {
 			SREG = Helper.setBit(SREG, 3);
 			CPU.getInstance().println("Overflow Flag Updated To 1");
 

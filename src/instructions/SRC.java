@@ -15,7 +15,7 @@ public class SRC extends ITypeInstruction {
 		int r1 = getR1Content();
 		int imm = getR2();
 		r1 &= DATA_MASK;
-		int res = r1>>>imm | r1<<8-imm;
+		int res = r1>>>imm | r1<<(8-imm);
 		res = Helper.signExtend(res);
 		CPU.getInstance().nFlag(res);
 		CPU.getInstance().zFlag(res);
