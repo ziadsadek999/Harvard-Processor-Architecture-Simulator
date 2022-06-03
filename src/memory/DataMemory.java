@@ -14,16 +14,19 @@ public class DataMemory {
 	}
 
 	public int readAddress(int address) {
-		return dataMemory[address];
+		return dataMemory[address] == null ? 0 : dataMemory[address];
 	}
 
 	public void writeAddress(int address, int data) {
+		String originalMemoryContenet = "00000000";
+		if (dataMemory[address] != null)
+			originalMemoryContenet = Helper.StringExtend(dataMemory[address], 8);
+
 		CPU.getInstance().println("WRITING BACK TO DATA MEMORY ADDRESS: " + address);
 		CPU.getInstance()
-				.println("MEMORY ADDRESS " + address + " Content Updated From binaryContent = "
-						+ Helper.StringExtend(dataMemory[address], 8) + " content = "
-						+ (dataMemory[address] == null ? 0 : dataMemory[address]) + " To binaryContent = "
-						+ Helper.StringExtend(data, 8) + " content = " + data);
+				.println("MEMORY ADDRESS " + address + " Content Updated From binaryContent = " + originalMemoryContenet
+						+ " content = " + (dataMemory[address] == null ? 0 : dataMemory[address])
+						+ " To binaryContent = " + Helper.StringExtend(data, 8) + " content = " + data);
 		dataMemory[address] = Helper.signExtend(data);
 	}
 
@@ -40,6 +43,7 @@ public class DataMemory {
 					+ " content = " + dataMemory[i]);
 		}
 	}
+
 	public void reset() {
 		dataMemory = new Integer[2048];
 	}

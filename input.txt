@@ -1,2 +1,2 @@
-LDI R0 5
-SRC R0 5
+LDI R1 5
+
