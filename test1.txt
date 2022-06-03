@@ -1,3 +1,0 @@
-LB R1 0
-LB R2 1
-ADD R1 R2
