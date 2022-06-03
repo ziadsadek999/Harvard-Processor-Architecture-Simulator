@@ -146,6 +146,8 @@ public class CPU {
 		CPU.getInstance().println("EXECUTION FINISHED!");
 		CPU.getInstance().println("REGISTERS");
 		CPU.getInstance()
+				.println("Program Counter: binaryContent = " + Helper.StringExtend(PC, 16) + " content = " + (PC));
+		CPU.getInstance()
 				.println("Status Register: " + Helper.StringExtend(SREG, 8) + " C=" + Helper.getBit(SREG, 4) + " V="
 						+ Helper.getBit(SREG, 3) + " N=" + Helper.getBit(SREG, 2) + " S=" + Helper.getBit(SREG, 1)
 						+ " Z=" + Helper.getBit(SREG, 0));
