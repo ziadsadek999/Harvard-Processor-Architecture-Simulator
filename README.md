@@ -98,21 +98,9 @@ Harvard.
 
 ### Hazards
 
-- **Data hazards**: Data hazards occurs when the instruction being decoded reads from the register file, then in the same clock cycle the instruction being executed changes the values in the register file. In this case the values obtained by the decoded instruction are old and in the next cycle it will be executing based on the wrong arguments.
+- **Data hazards**: Data hazards occurs when the instruction being decoded reads from the register file, then in the same clock cycle the instruction being executed changes the values in the register file. In this case the values obtained by the decoded instruction are old and in the next cycle it will be executing based on the wrong arguments. We could avoid these data hazards by finishing the execution of the executing instruction at the beginning of the clock cycle. In this case, decoding will happen only after execution is finished so the values inside the register files will not be changed until the next cycle.
 
-  Solution:
-
-  We could avoid these data hazards by finishing the execution of the executing instruction at the beginning of the clock cycle. In this case, decoding will happen only after execution is finished so the values inside the register files will not be changed untill the next cycle.
-
--  **Control hazards**: Control hazards occur when we perform branch or jump instructions. When the instruction is executed it changes the value inside the PC to point to the instruction that we wish to execute next. However, there are two instructions in the pipeline that are still being fetched or decoded that will flow to the executing phase in the next two cycles and we do not want this to happen.
-
-  Solution:
-
-  Whenever a branch or jump instruction is executed, we flush the pipeline. This will cost us extra two clock cycles as we will begin the pipeline again but it will give us consistent results.
-
-  
-  
-  
+- **Control hazards**: Control hazards occur when we perform branch or jump instructions. When the instruction is executed it changes the value inside the PC to point to the instruction that we wish to execute next. However, there are two instructions in the pipeline that are still being fetched or decoded that will flow to the executing phase in the next two cycles and we do not want this to happen. The solution for this problem is that whenever a branch or jump instruction is executed, we flush the pipeline. This will cost us extra two clock cycles as we will begin the pipeline again but it will give us consistent results.
 
 ### Graphical User Interface
 
