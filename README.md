@@ -110,10 +110,8 @@ Harvard.
 
   Whenever a branch or jump instruction is executed, we flush the pipeline. This will cost us extra two clock cycles as we will begin the pipeline again but it will give us consistent results.
 
--  
-
   
-
+  
   
 
 ### Graphical User Interface
