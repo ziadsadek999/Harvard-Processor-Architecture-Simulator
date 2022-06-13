@@ -110,15 +110,17 @@ Harvard.
 
   Whenever a branch or jump instruction is executed, we flush the pipeline. This will cost us extra two clock cycles as we will begin the pipeline again but it will give us consistent results.
 
+-  
+
   
-  
+
   
 
 ### Graphical User Interface
 
 The Graphical user interface is implemented using SWING. It consists of three panels.
 
-![](C:\Users\lenovo\eclipse-workspace\Computer-Architecture\Capture.PNG)
+![](https://github.com/ziadsadek999/Saturn-Simulator/blob/main/Capture.PNG)
 
 1. Panel 1 is the textbox in which you will type your instructions. Each instruction must be written in a separate line.
 2. Panel 2 is the log that in which information about each clock cycle is printed.
