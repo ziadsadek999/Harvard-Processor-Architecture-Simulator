@@ -108,10 +108,8 @@ Harvard.
 
   ###### Solution:
 
-  Whenever a branch or jump instruction is executed, we flush the pipeline. This will cost us extra two clock cycles as we will begin the pipeline again but it will give us consistent results.
+  We could avoid these data hazards by finishing the execution of the executing instruction at the beginning of the clock cycle. In this case, decoding will happen only after execution is finished so the values inside the register files will not be changed untill the next cycle.
 
-  
-  
   
 
 ### Graphical User Interface
