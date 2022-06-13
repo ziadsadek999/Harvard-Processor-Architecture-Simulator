@@ -106,10 +106,11 @@ Harvard.
 
 -  **Control hazards**: Control hazards occur when we perform branch or jump instructions. When the instruction is executed it changes the value inside the PC to point to the instruction that we wish to execute next. However, there are two instructions in the pipeline that are still being fetched or decoded that will flow to the executing phase in the next two cycles and we do not want this to happen.
 
-  ###### Solution:
+  - ###### Solution:
 
+  
   We could avoid these data hazards by finishing the execution of the executing instruction at the beginning of the clock cycle. In this case, decoding will happen only after execution is finished so the values inside the register files will not be changed untill the next cycle.
-
+  
   
 
 ### Graphical User Interface
