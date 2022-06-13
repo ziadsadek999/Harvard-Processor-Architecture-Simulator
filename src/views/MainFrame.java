@@ -42,7 +42,7 @@ public class MainFrame extends JFrame implements ActionListener {
 		log.setBackground(new Color(3, 3, 10));
 		log.setForeground(Color.GREEN);
 		right.add(log);
-		nextLine = new JButton("Next Line");
+		nextLine = new JButton("Next Cycle");
 		runAll = new JButton("Run ALL");
 		reset = new JButton("Reset");
 		nextLine.addActionListener(this);

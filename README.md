@@ -111,22 +111,24 @@ Harvard.
   Whenever a branch or jump instruction is executed, we flush the pipeline. This will cost us extra two clock cycles as we will begin the pipeline again but it will give us consistent results.
 
   
+  
+  
 
 ### Graphical User Interface
 
 The Graphical user interface is implemented using SWING. It consists of three panels.
 
-![](C:\Users\lenovo\Desktop\sim.PNG)
+![](C:\Users\lenovo\eclipse-workspace\Computer-Architecture\Capture.PNG)
 
 1. Panel 1 is the textbox in which you will type your instructions. Each instruction must be written in a separate line.
 2. Panel 2 is the log that in which information about each clock cycle is printed.
 3. Panel 3 shows the content the 64 general purpose registers.
 
-After typing your instructions in the first panel, you may click "Next Line" or "Run ALL". Either way, the textbox becomes uneditable after you click and you can not edit it again until execution is finished and you press "reset" to write another code.
+After typing your instructions in the first panel, you may click `Next Cycle` or `Run ALL`. Either way, the textbox becomes uneditable after you click and you can not edit it again until execution is finished and you press `reset` to write another code.
 
-If you click on "Run ALL" all your instructions will be executed and the changes in the pipeline, registers and memory will be shown every clock cycle in panel 2.
+If you click on `Run ALL` all your instructions will be executed and the changes in the pipeline, registers and memory will be shown every clock cycle in panel 2.
 
-If you click "Next Line" it will show you the next clock cycle only.
+If you click `Next Cycle` it will show you the next clock cycle only.
 
 ### How to run?
 
