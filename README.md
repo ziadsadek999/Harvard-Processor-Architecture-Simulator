@@ -7,7 +7,6 @@ A simulation of a fictional processor using Java.
 Harvard.
 
 ### Memory
-![318312338_479250667624018_1481873929269257325_n](https://user-images.githubusercontent.com/68449722/210192623-102bba2f-902f-4a7a-900f-81e0735be260.jpg)
 
 - **Instruction memory**: 1024 words where every word's size is 16 bits.
 - **Data memory**: 2048 words where every word's size is 8 bits.
